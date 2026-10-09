@@ -1,0 +1,243 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:aporto:deployment",
+  "title": "Aporto Deployment (parsed TOML)",
+  "description": "Standard TOML configuration after parsing to an object. Apply the documented semantic checks in addition to this structural schema.",
+  "$comment": "Reject duplicate keys during parsing and enable URI format assertion. Resolve model.connection from each loaded bundle against connections, enforce unique agent IDs, verify bundle digests, match the runtime shape to the bundle provider, require exact referenced-secret bindings, and check endpoint credentials/query/fragment restrictions, reserved or case-insensitive duplicate headers, loopback-only AgentENV local endpoints and filesystem path validity in a semantic validation pass. Neither this schema nor its references load a bundle or read environment variables.",
+  "type": "object",
+  "properties": {
+    "connections": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/identifier"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/connection"
+      },
+      "minProperties": 1
+    },
+    "agents": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "items": {
+        "$ref": "#/$defs/agent"
+      }
+    }
+  },
+  "required": [
+    "connections",
+    "agents"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]*$"
+    },
+    "envName": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+    },
+    "secretName": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Z_][A-Z0-9_]*$"
+    },
+    "httpUri": {
+      "type": "string",
+      "minLength": 1,
+      "format": "uri",
+      "pattern": "^https?://",
+      "description": "Absolute HTTP(S) URI. Semantic validation also rejects embedded credentials, query strings and fragments."
+    },
+    "environment": {
+      "type": "object",
+      "properties": {
+        "env": {
+          "$ref": "#/$defs/envName"
+        }
+      },
+      "required": [
+        "env"
+      ],
+      "additionalProperties": false
+    },
+    "connection": {
+      "type": "object",
+      "properties": {
+        "endpoint": {
+          "$ref": "#/$defs/httpUri",
+          "description": "Complete Responses API endpoint URI, including its route; this is not a base URL."
+        },
+        "api_key": {
+          "$ref": "#/$defs/environment"
+        },
+        "timeout_ms": {
+          "type": "integer",
+          "minimum": 1000,
+          "maximum": 600000,
+          "default": 120000
+        },
+        "headers": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^[!#$%&'*+.^_`|~0-9A-Za-z-]+$"
+          },
+          "additionalProperties": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "$ref": "#/$defs/environment"
+              }
+            ]
+          }
+        }
+      },
+      "required": [
+        "endpoint",
+        "api_key"
+      ],
+      "additionalProperties": false
+    },
+    "agent": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "bundle": {
+          "type": "string",
+          "minLength": 1
+        },
+        "runtime": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/dockerRuntime"
+            },
+            {
+              "$ref": "#/$defs/agentenvRuntime"
+            }
+          ]
+        },
+        "secrets": {
+          "type": "object",
+          "propertyNames": {
+            "$ref": "#/$defs/secretName"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/environment"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "bundle",
+        "runtime"
+      ],
+      "additionalProperties": false
+    },
+    "dockerRuntime": {
+      "description": "Docker deployment settings; valid only for a Docker bundle. Empty settings use backend defaults. No provider, image, owner, AgentENV credentials or lease fields are accepted.",
+      "type": "object",
+      "properties": {
+        "host": {
+          "type": "string",
+          "pattern": "^unix:///[^\\u0000-\\u001f\\u007f?#]*$",
+          "default": "unix:///var/run/docker.sock"
+        },
+        "binary": {
+          "type": "string",
+          "minLength": 1,
+          "default": "docker"
+        },
+        "memory_mb": {
+          "type": "integer",
+          "minimum": 64,
+          "maximum": 1048576,
+          "default": 512
+        },
+        "cpus": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1024,
+          "default": 2
+        },
+        "pids_limit": {
+          "type": "integer",
+          "minimum": 16,
+          "maximum": 65536,
+          "default": 128
+        },
+        "network": {
+          "enum": [
+            "none",
+            "bridge"
+          ],
+          "default": "none"
+        }
+      },
+      "additionalProperties": false
+    },
+    "agentenvRuntime": {
+      "description": "AgentENV deployment settings; valid only for an AgentENV bundle. Local API URL defaults to http://127.0.0.1:8000. Remote mode requires api_url. Template comes from the bundle.",
+      "type": "object",
+      "properties": {
+        "mode": {
+          "enum": [
+            "local",
+            "remote"
+          ]
+        },
+        "api_url": {
+          "$ref": "#/$defs/httpUri"
+        },
+        "sandbox_url": {
+          "$ref": "#/$defs/httpUri"
+        },
+        "api_key": {
+          "$ref": "#/$defs/environment"
+        },
+        "lease_ms": {
+          "type": "integer",
+          "minimum": 30000,
+          "maximum": 86400000,
+          "default": 300000
+        }
+      },
+      "required": [
+        "mode",
+        "api_key"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "mode": {
+                "const": "remote"
+              }
+            },
+            "required": [
+              "mode"
+            ]
+          },
+          "then": {
+            "required": [
+              "api_url"
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

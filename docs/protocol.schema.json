@@ -1,0 +1,964 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ProtocolSchema",
+  "description": "Exported schema root; all public payloads are represented by generated definitions.",
+  "type": "object",
+  "properties": {
+    "agents": {
+      "$ref": "#/$defs/AgentListResult"
+    },
+    "event_list": {
+      "$ref": "#/$defs/EventListParams"
+    },
+    "events": {
+      "$ref": "#/$defs/EventListResult"
+    },
+    "initialize": {
+      "$ref": "#/$defs/InitializeResult"
+    },
+    "initialize_params": {
+      "$ref": "#/$defs/InitializeParams"
+    },
+    "item": {
+      "$ref": "#/$defs/TurnItem"
+    },
+    "item_list": {
+      "$ref": "#/$defs/ItemListParams"
+    },
+    "items": {
+      "$ref": "#/$defs/ItemListResult"
+    },
+    "request": {
+      "$ref": "#/$defs/RpcRequest"
+    },
+    "response": {
+      "$ref": "#/$defs/RpcResponse"
+    },
+    "runtime_instances": {
+      "$ref": "#/$defs/RuntimeInstanceListResult"
+    },
+    "runtime_instances_params": {
+      "$ref": "#/$defs/RuntimeInstanceListParams"
+    },
+    "thread": {
+      "$ref": "#/$defs/Thread"
+    },
+    "thread_list": {
+      "$ref": "#/$defs/ThreadListParams"
+    },
+    "thread_read": {
+      "$ref": "#/$defs/ThreadReadResult"
+    },
+    "thread_read_params": {
+      "$ref": "#/$defs/ThreadReadParams"
+    },
+    "thread_start": {
+      "$ref": "#/$defs/ThreadStartParams"
+    },
+    "threads": {
+      "$ref": "#/$defs/ThreadListResult"
+    },
+    "turn": {
+      "$ref": "#/$defs/Turn"
+    },
+    "turn_interrupt": {
+      "$ref": "#/$defs/TurnInterruptParams"
+    },
+    "turn_start": {
+      "$ref": "#/$defs/TurnStartParams"
+    }
+  },
+  "required": [
+    "request",
+    "response",
+    "initialize",
+    "agents",
+    "runtime_instances",
+    "runtime_instances_params",
+    "thread",
+    "threads",
+    "thread_read",
+    "turn",
+    "item",
+    "items",
+    "events",
+    "initialize_params",
+    "thread_start",
+    "thread_list",
+    "thread_read_params",
+    "turn_start",
+    "turn_interrupt",
+    "item_list",
+    "event_list"
+  ],
+  "$defs": {
+    "AgentListResult": {
+      "type": "object",
+      "properties": {
+        "agents": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AgentSummary"
+          }
+        }
+      },
+      "required": [
+        "agents"
+      ]
+    },
+    "AgentSummary": {
+      "type": "object",
+      "properties": {
+        "bundle_digest": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "model": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "release_id": {
+          "type": "string"
+        },
+        "runtime": {
+          "$ref": "#/$defs/RuntimeOptions"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "model",
+        "bundle_digest",
+        "release_id",
+        "runtime"
+      ]
+    },
+    "Event": {
+      "type": "object",
+      "properties": {
+        "created_at": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "data": true,
+        "kind": {
+          "type": "string"
+        },
+        "sequence": {
+          "type": "integer",
+          "format": "uint64",
+          "minimum": 0
+        },
+        "thread_id": {
+          "type": "string"
+        },
+        "turn_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "sequence",
+        "thread_id",
+        "kind",
+        "data",
+        "created_at"
+      ]
+    },
+    "EventListParams": {
+      "type": "object",
+      "properties": {
+        "after": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint64",
+          "minimum": 0
+        },
+        "limit": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint32",
+          "minimum": 0
+        },
+        "thread_id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "thread_id"
+      ]
+    },
+    "EventListResult": {
+      "type": "object",
+      "properties": {
+        "events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Event"
+          }
+        },
+        "has_more": {
+          "type": "boolean"
+        },
+        "next_cursor": {
+          "type": "integer",
+          "format": "uint64",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "events",
+        "next_cursor",
+        "has_more"
+      ]
+    },
+    "InitializeParams": {
+      "type": "object",
+      "properties": {
+        "client_name": {
+          "type": "string"
+        },
+        "protocol_version": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "protocol_version",
+        "client_name"
+      ]
+    },
+    "InitializeResult": {
+      "type": "object",
+      "properties": {
+        "capabilities": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "protocol_version": {
+          "type": "string"
+        },
+        "server_name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "protocol_version",
+        "server_name",
+        "capabilities"
+      ]
+    },
+    "ItemKind": {
+      "type": "string",
+      "enum": [
+        "assistant_message",
+        "ptc_call",
+        "tool_call"
+      ]
+    },
+    "ItemListParams": {
+      "type": "object",
+      "properties": {
+        "after": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint64",
+          "minimum": 0
+        },
+        "limit": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint32",
+          "minimum": 0
+        },
+        "thread_id": {
+          "type": "string"
+        },
+        "turn_id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "thread_id",
+        "turn_id"
+      ]
+    },
+    "ItemListResult": {
+      "type": "object",
+      "properties": {
+        "has_more": {
+          "type": "boolean"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/TurnItem"
+          }
+        },
+        "next_cursor": {
+          "type": "integer",
+          "format": "uint64",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "items",
+        "next_cursor",
+        "has_more"
+      ]
+    },
+    "ItemPhase": {
+      "type": "string",
+      "enum": [
+        "commentary",
+        "final_answer"
+      ]
+    },
+    "ItemStatus": {
+      "type": "string",
+      "enum": [
+        "in_progress",
+        "completed",
+        "failed",
+        "interrupted"
+      ]
+    },
+    "RpcError": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "message"
+      ]
+    },
+    "RpcRequest": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "uint64",
+          "minimum": 0
+        },
+        "jsonrpc": {
+          "type": "string"
+        },
+        "method": {
+          "type": "string"
+        },
+        "params": {
+          "default": null
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "jsonrpc",
+        "id",
+        "method"
+      ]
+    },
+    "RpcResponse": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RpcError"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint64",
+          "minimum": 0
+        },
+        "jsonrpc": {
+          "type": "string"
+        },
+        "result": true
+      },
+      "required": [
+        "jsonrpc"
+      ]
+    },
+    "RuntimeInstance": {
+      "description": "An Aporto-owned, materialized instance. Its immutable release and image are\nshared by all attached threads; conversation history remains thread-local.",
+      "type": "object",
+      "properties": {
+        "agent_id": {
+          "type": "string"
+        },
+        "bundle_digest": {
+          "type": "string"
+        },
+        "busy": {
+          "type": "boolean"
+        },
+        "created_at": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "id": {
+          "type": "string"
+        },
+        "image": {
+          "type": "string"
+        },
+        "provider": {
+          "type": "string"
+        },
+        "release_id": {
+          "type": "string"
+        },
+        "sandbox_id": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "workdir": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "agent_id",
+        "release_id",
+        "bundle_digest",
+        "provider",
+        "image",
+        "sandbox_id",
+        "workdir",
+        "created_at",
+        "updated_at",
+        "busy"
+      ]
+    },
+    "RuntimeInstanceListParams": {
+      "type": "object",
+      "properties": {
+        "agent_id": {
+          "type": "string"
+        },
+        "cursor": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "limit": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint32",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "agent_id"
+      ]
+    },
+    "RuntimeInstanceListResult": {
+      "type": "object",
+      "properties": {
+        "instances": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/RuntimeInstance"
+          }
+        },
+        "next_cursor": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "instances"
+      ]
+    },
+    "RuntimeOptions": {
+      "type": "object",
+      "properties": {
+        "default_image": {
+          "type": "string"
+        },
+        "default_workdir": {
+          "type": "string"
+        },
+        "images": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "provider": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "provider",
+        "images",
+        "default_image",
+        "default_workdir"
+      ]
+    },
+    "Thread": {
+      "type": "object",
+      "properties": {
+        "agent_id": {
+          "type": "string"
+        },
+        "bundle_digest": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "id": {
+          "type": "string"
+        },
+        "last_sequence": {
+          "type": "integer",
+          "format": "uint64",
+          "minimum": 0
+        },
+        "release_id": {
+          "type": "string"
+        },
+        "runtime_image": {
+          "type": "string"
+        },
+        "runtime_instance_id": {
+          "type": "string"
+        },
+        "runtime_provider": {
+          "type": "string"
+        },
+        "sandbox_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "title": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "workdir": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "agent_id",
+        "bundle_digest",
+        "release_id",
+        "runtime_instance_id",
+        "runtime_image",
+        "runtime_provider",
+        "workdir",
+        "created_at",
+        "updated_at",
+        "last_sequence"
+      ]
+    },
+    "ThreadListParams": {
+      "type": "object",
+      "properties": {
+        "cursor": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "limit": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint32",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "ThreadListResult": {
+      "type": "object",
+      "properties": {
+        "next_cursor": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "threads": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Thread"
+          }
+        }
+      },
+      "required": [
+        "threads"
+      ]
+    },
+    "ThreadReadParams": {
+      "type": "object",
+      "properties": {
+        "before": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "limit": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint32",
+          "minimum": 0
+        },
+        "thread_id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "thread_id"
+      ]
+    },
+    "ThreadReadResult": {
+      "type": "object",
+      "properties": {
+        "next_cursor": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "thread": {
+          "$ref": "#/$defs/Thread"
+        },
+        "turns": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Turn"
+          }
+        }
+      },
+      "required": [
+        "thread",
+        "turns"
+      ]
+    },
+    "ThreadRuntimeParams": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "image": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "mode": {
+              "type": "string",
+              "const": "new"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "mode"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "instance_id": {
+              "type": "string"
+            },
+            "mode": {
+              "type": "string",
+              "const": "reuse"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "mode",
+            "instance_id"
+          ]
+        }
+      ]
+    },
+    "ThreadStartParams": {
+      "type": "object",
+      "properties": {
+        "agent_id": {
+          "type": "string"
+        },
+        "runtime": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ThreadRuntimeParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "title": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "workdir": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "agent_id"
+      ]
+    },
+    "Turn": {
+      "type": "object",
+      "properties": {
+        "created_at": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "error": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "id": {
+          "type": "string"
+        },
+        "input": {
+          "type": "string"
+        },
+        "output": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "status": {
+          "$ref": "#/$defs/TurnStatus"
+        },
+        "thread_id": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "required": [
+        "id",
+        "thread_id",
+        "input",
+        "status",
+        "created_at",
+        "updated_at"
+      ]
+    },
+    "TurnInterruptParams": {
+      "type": "object",
+      "properties": {
+        "thread_id": {
+          "type": "string"
+        },
+        "turn_id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "thread_id",
+        "turn_id"
+      ]
+    },
+    "TurnItem": {
+      "description": "A bounded, cumulative public transcript snapshot, independent of model history.",
+      "type": "object",
+      "properties": {
+        "created_at": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "elapsed_ms": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint64",
+          "minimum": 0
+        },
+        "error": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "id": {
+          "type": "string"
+        },
+        "input": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "kind": {
+          "$ref": "#/$defs/ItemKind"
+        },
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "ordinal": {
+          "description": "Immutable ordering cursor: sequence of the first event for this item.",
+          "type": "integer",
+          "format": "uint64",
+          "minimum": 0
+        },
+        "output": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "phase": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ItemPhase"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "sequence": {
+          "description": "Sequence of the latest persisted cumulative snapshot.",
+          "type": "integer",
+          "format": "uint64",
+          "minimum": 0
+        },
+        "status": {
+          "$ref": "#/$defs/ItemStatus"
+        },
+        "text": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "truncated": {
+          "type": "boolean",
+          "default": false
+        },
+        "turn_id": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "status",
+        "turn_id",
+        "ordinal",
+        "sequence",
+        "created_at",
+        "updated_at"
+      ]
+    },
+    "TurnStartParams": {
+      "type": "object",
+      "properties": {
+        "idempotency_key": {
+          "type": "string"
+        },
+        "input": {
+          "type": "string"
+        },
+        "thread_id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "thread_id",
+        "input",
+        "idempotency_key"
+      ]
+    },
+    "TurnStatus": {
+      "type": "string",
+      "enum": [
+        "queued",
+        "running",
+        "cancelling",
+        "completed",
+        "failed",
+        "interrupted"
+      ]
+    }
+  }
+}

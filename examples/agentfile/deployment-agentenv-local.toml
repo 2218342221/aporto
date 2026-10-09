@@ -1,0 +1,21 @@
+[connections.primary]
+endpoint = "https://api.openai.com/v1/responses"
+api_key = { env = "OPENAI_API_KEY" }
+timeout_ms = 120000
+
+[connections.primary.headers]
+X-Agent-Name = "reviewer"
+
+[[agents]]
+id = "reviewer"
+# Build with the AgentENV [runtime] shown in README.md before using this binding.
+bundle = "./dist/reviewer-agentenv.agent.json"
+
+# Provider and template come from the bundle's [runtime].
+[agents.runtime]
+mode = "local"
+api_url = "http://127.0.0.1:8000"
+api_key = { env = "AENV_API_KEY" }
+lease_ms = 300000
+# sandbox_url = "http://127.0.0.1:8000"
+

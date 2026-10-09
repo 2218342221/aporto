@@ -1,0 +1,81 @@
+.new-dialog.runtime-dialog {
+  width: 540px;
+  max-height: calc(100dvh - 32px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+.runtime-dialog input,
+.runtime-dialog select {
+  min-width: 0;
+  max-width: 100%;
+  text-overflow: ellipsis;
+}
+.runtime-mode {
+  display: flex;
+  gap: 8px;
+  min-width: 0;
+  margin: 24px 0 0;
+  padding: 0;
+  border: 0;
+}
+.runtime-mode legend {
+  padding: 0;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+.runtime-mode label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  padding: 12px 8px;
+  border: 1px solid var(--outline);
+  border-radius: 24px;
+  color: var(--muted);
+  cursor: pointer;
+}
+.runtime-mode label.selected {
+  color: var(--on-primary-container);
+  border-color: var(--primary-container);
+  background: var(--primary-container);
+}
+.runtime-mode input {
+  width: 14px;
+  height: 14px;
+  min-height: 0;
+  padding: 0;
+  margin: 0;
+  box-shadow: none;
+  accent-color: var(--primary);
+}
+.instance-error {
+  margin-top: 10px;
+  color: var(--error);
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+.instance-error .text-button {
+  margin-left: 8px;
+}
+.instance-more {
+  margin-top: 8px;
+}
+.runtime-dialog input[readonly] {
+  color: var(--muted);
+  border-style: dashed;
+}
+@media (max-width: 760px) {
+  .new-dialog.runtime-dialog {
+    padding: 24px 20px;
+  }
+  .runtime-dialog label {
+    margin-top: 18px;
+  }
+  .runtime-mode label {
+    margin-top: 0;
+  }
+}

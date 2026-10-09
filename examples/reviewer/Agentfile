@@ -1,0 +1,22 @@
+# All resource paths are relative to this build context.
+[agent]
+name = "reviewer"
+
+[model]
+name = "YOUR_MODEL_ID"
+connection = "primary"
+
+[runtime]
+provider = "agentenv"
+template = "aporto-python"
+
+[[prompts]]
+source = "prompts/reviewer.md"
+
+[[skills]]
+source = "skills/code-review"
+
+[[mcp]]
+name = "policy"
+source = "mcp/policy"
+command = ["python3", "server.py"]

@@ -1,0 +1,39 @@
+:root {
+  font-family:
+    'Google Sans Flex Variable', 'Noto Sans SC Variable', 'Noto Sans CJK SC', 'PingFang SC',
+    'Microsoft YaHei', system-ui, sans-serif;
+  color: var(--text);
+  background: var(--canvas);
+  font-synthesis: none;
+  font-size: 14px;
+  line-height: 1.5;
+  font-weight: 400;
+  --muted: #b0b2b8;
+  --line: #2b2d30;
+  --sidebar: 260px;
+  --text: #e3e3e3;
+  --outline: #5f6368;
+  --primary: #a8c7fa;
+  --on-primary: #102344;
+  --primary-hover: #c2d7fb;
+  --primary-container: #25324a;
+  --on-primary-container: #d3e3fd;
+  --surface: #0e0e0e;
+  --surface-variant: #1e1f22;
+  --canvas: #0e0e0e;
+  --success: #92d6a3;
+  --success-container: #203829;
+  --error: #f2b8b5;
+  --error-container: #422825;
+  --warning: #e8c184;
+  --warning-container: #3a3020;
+  --header-height: 64px;
+  font-optical-sizing: auto;
+  -webkit-font-smoothing: antialiased;
+  color-scheme: dark;
+  --surface-raised: #17181a;
+  --surface-hover: #282a2d;
+  --sidebar-surface: #161719;
+  --error-outline: #754943;
+  --brand-gradient: linear-gradient(100deg, #779cff 3%, #b18cde 57%, #df839e 100%);
+}

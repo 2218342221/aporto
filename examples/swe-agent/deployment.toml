@@ -1,0 +1,16 @@
+[connections.primary]
+endpoint = "https://api.openai.com/v1/responses"
+api_key = { env = "OPENAI_API_KEY" }
+timeout_ms = 120000
+
+[[agents]]
+id = "swe-agent"
+bundle = "swe-agent.agent.json"
+
+[agents.runtime]
+host = "unix:///var/run/docker.sock"
+binary = "docker"
+memory_mb = 512
+cpus = 2
+pids_limit = 128
+network = "none"

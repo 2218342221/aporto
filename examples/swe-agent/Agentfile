@@ -1,0 +1,23 @@
+[agent]
+name = "swe-agent"
+description = "Reproduce bugs, implement focused changes, run regression checks, and deliver patches."
+
+[model]
+name = "YOUR_MODEL_ID"
+connection = "primary"
+
+[runtime]
+provider = "docker"
+image = "python:3.12-slim"
+workdir = "/workspace"
+
+[[prompts]]
+source = "prompts/swe-agent.md"
+
+[[skills]]
+source = "skills/software-engineering"
+
+[[mcp]]
+name = "project"
+source = "mcp/project"
+command = ["python3", "server.py"]

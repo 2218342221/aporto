@@ -1,0 +1,15 @@
+[connections.primary]
+endpoint = "https://api.openai.com/v1/responses"
+api_key = { env = "OPENAI_API_KEY" }
+timeout_ms = 120000
+
+[[agents]]
+id = "reviewer"
+bundle = "reviewer.agent.json"
+
+[agents.runtime]
+mode = "remote"
+api_url = "https://aenv.example.com"
+sandbox_url = "https://aenv-data.example.com"
+api_key = { env = "AENV_API_KEY" }
+lease_ms = 300000

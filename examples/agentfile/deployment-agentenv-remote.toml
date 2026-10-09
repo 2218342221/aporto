@@ -1,0 +1,21 @@
+[connections.primary]
+endpoint = "https://api.openai.com/v1/responses"
+api_key = { env = "OPENAI_API_KEY" }
+timeout_ms = 120000
+
+[connections.primary.headers]
+X-Agent-Name = "reviewer"
+
+[[agents]]
+id = "reviewer"
+# The same AgentENV bundle can be bound to local or remote AgentENV services.
+bundle = "./dist/reviewer-agentenv.agent.json"
+
+# Replace both placeholder service URLs before deploying.
+[agents.runtime]
+mode = "remote"
+api_url = "https://agentenv.example.com"
+sandbox_url = "https://sandbox.agentenv.example.com"
+api_key = { env = "AENV_API_KEY" }
+lease_ms = 300000
+

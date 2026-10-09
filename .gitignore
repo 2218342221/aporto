@@ -1,0 +1,17 @@
+/target/
+*.agent.json
+*.events.jsonl
+/.aporto/
+/releases/
+/examples/*/releases/
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+.env
+.env.*
+!.env.example
+!.env.*.example
+*.local.toml
+__pycache__/
+*.py[cod]
+.DS_Store

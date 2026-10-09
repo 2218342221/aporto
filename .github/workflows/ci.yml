@@ -1,0 +1,78 @@
+name: CI
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  test:
+    name: Rust and runtime integration
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: dtolnay/rust-toolchain@1.93.0
+        with:
+          components: rustfmt, clippy
+      - run: cargo fmt --all -- --check
+      - run: cargo clippy --workspace --all-features --locked --all-targets -- -D warnings
+      - run: cargo test --workspace --all-features --locked
+      - run: cargo build --workspace --locked
+      - name: Check generated protocol schema
+        run: |
+          cargo run --quiet --locked -p aporto-protocol --example export-schema > /tmp/aporto-protocol.schema.json
+          diff -u docs/protocol.schema.json /tmp/aporto-protocol.schema.json
+      - name: Build and inspect examples offline
+        run: |
+          aporto_examples=$(mktemp -d)
+          trap 'rm -rf "$aporto_examples"' EXIT
+          for example in swe-agent reviewer docker-reviewer agentfile; do
+            ./target/debug/aporto build "examples/$example" -o "$aporto_examples/$example.agent.json"
+            ./target/debug/aporto inspect "$aporto_examples/$example.agent.json" > /dev/null
+          done
+          ./target/debug/aporto build examples/agentfile -f Agentfile.multiple-images -o "$aporto_examples/images.agent.json"
+          ./target/debug/aporto inspect "$aporto_examples/images.agent.json" > /dev/null
+      - run: python3 scripts/e2e_stack.py
+      - run: python3 scripts/e2e_stack.py --mode remote
+      - run: python3 scripts/e2e_instances.py --runtime agentenv --mode local
+      - run: python3 scripts/e2e_instances.py --runtime agentenv --mode remote
+      - name: Prepare local Docker image
+        timeout-minutes: 5
+        run: |
+          docker --host unix:///var/run/docker.sock info
+          docker --host unix:///var/run/docker.sock pull python:3.12-slim
+          docker --host unix:///var/run/docker.sock pull python:3.11-slim
+      - name: Real Docker runtime integration
+        timeout-minutes: 10
+        env:
+          APORTO_DOCKER_TESTS: "1"
+        run: cargo test --locked --test docker_runtime -- --ignored --nocapture
+      - name: Server and Core with real Docker
+        timeout-minutes: 5
+        run: python3 scripts/e2e_stack.py --runtime docker
+      - name: Image selection and shared instances with real Docker
+        timeout-minutes: 5
+        run: python3 scripts/e2e_instances.py --runtime docker
+  web:
+    name: Client
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: apps/web
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+      - run: npm ci
+      - run: npm run format:check
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - name: Validate README artwork
+        run: npm run docs:images -- --out-dir "$RUNNER_TEMP/readme-visuals"
+      - run: npm test
+      - run: npm run test:e2e

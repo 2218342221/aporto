@@ -1,0 +1,329 @@
+.turn-activity {
+  min-width: 0;
+}
+.turn-thinking {
+  padding: 6px 0 16px;
+  color: var(--muted);
+  font-size: 16px;
+  animation: activity-blink 2s ease-in-out infinite;
+}
+.turn-process {
+  min-width: 0;
+  margin-bottom: 22px;
+}
+.turn-process > summary {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 38px;
+  padding: 0 0 12px;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 15px;
+  cursor: pointer;
+  list-style: none;
+}
+.turn-process > summary:hover {
+  color: var(--text);
+}
+.turn-process > summary::-webkit-details-marker,
+.activity-tool > summary::-webkit-details-marker,
+.activity-source > summary::-webkit-details-marker,
+.file-result > summary::-webkit-details-marker {
+  display: none;
+}
+.turn-process > summary:focus-visible,
+.activity-tool > summary:focus-visible,
+.activity-source > summary:focus-visible,
+.file-result > summary:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+  border-radius: 5px;
+}
+.process-chevron {
+  margin-left: 3px;
+}
+.turn-process[open] > summary .process-chevron,
+.activity-tool[open] > summary .activity-chevron,
+.activity-source[open] > summary .activity-chevron,
+.file-result[open] .file-result-action svg {
+  transform: rotate(90deg);
+}
+.turn-process-content {
+  padding-top: 20px;
+}
+.activity-message {
+  margin: 18px 0;
+}
+.activity-message:first-child {
+  margin-top: 0;
+}
+.activity-message.commentary .markdown {
+  color: var(--text);
+  font-size: 16px;
+  line-height: 1.8;
+}
+.activity-message.final_answer {
+  margin: 22px 0 0;
+}
+.activity-tool {
+  margin: 4px 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+.activity-tool > summary {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 32px;
+  padding: 4px 0;
+  cursor: pointer;
+  list-style: none;
+  border-radius: 5px;
+}
+.activity-tool > summary:hover,
+.activity-source > summary:hover {
+  color: var(--text);
+}
+.activity-tool > summary > svg {
+  flex-shrink: 0;
+}
+.activity-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.activity-chevron {
+  flex-shrink: 0;
+  opacity: 0.65;
+}
+.activity-time {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.activity-tool.failed > summary,
+.activity-message-status.failed,
+.activity-error {
+  color: var(--error);
+}
+.activity-tool.interrupted > summary,
+.activity-message-status.interrupted {
+  color: var(--warning);
+}
+.activity-group-content {
+  margin: 6px 0 14px 8px;
+  padding-left: 16px;
+  border-left: 1px solid var(--line);
+}
+.activity-source {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 5px;
+}
+.activity-source > summary {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  width: fit-content;
+  min-height: 28px;
+  list-style: none;
+  cursor: pointer;
+}
+.activity-details {
+  padding: 8px 0 12px 26px;
+  min-width: 0;
+}
+.activity-source .activity-details {
+  padding-left: 0;
+}
+.activity-detail-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+  margin-bottom: 10px;
+}
+.activity-payload + .activity-payload {
+  margin-top: 12px;
+}
+.activity-label,
+.activity-message-status {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+  margin: 5px 0;
+}
+.activity-payload pre,
+.file-result-content pre {
+  max-height: 360px;
+  overflow: auto;
+  margin: 6px 0 0;
+  padding: 12px 14px;
+  border-radius: 8px;
+  background: var(--surface-variant);
+  color: var(--text);
+  font:
+    12px/1.65 ui-monospace,
+    SFMono-Regular,
+    Consolas,
+    monospace;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  tab-size: 2;
+}
+.activity-error,
+.activity-load-error {
+  font-size: 13px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  margin: 8px 0;
+}
+.activity-load-error {
+  color: var(--error);
+}
+.activity-load-error .text-button {
+  margin-left: 10px;
+}
+.activity-more {
+  margin: 8px 0;
+}
+.streaming-caret {
+  display: inline-block;
+  width: 4px;
+  height: 13px;
+  background: var(--muted);
+  margin-top: 5px;
+  border-radius: 2px;
+  animation: activity-blink 1s ease-in-out infinite;
+}
+.file-results {
+  display: grid;
+  gap: 10px;
+  margin-top: 20px;
+}
+.file-result {
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface-raised);
+}
+.file-result > summary {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  list-style: none;
+  padding: 16px;
+  cursor: pointer;
+  border-radius: 14px;
+}
+.file-result-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--muted);
+}
+.file-result-meta {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-direction: column;
+  gap: 3px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.file-result-path {
+  color: var(--text);
+  font-size: 15px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.file-result-action {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--muted);
+  font-size: 13px;
+  flex-shrink: 0;
+}
+.file-result-content {
+  padding: 0 16px 16px;
+}
+.file-result-full-path {
+  margin: 0 0 10px;
+  color: var(--muted);
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+.file-result-content pre {
+  background: var(--surface);
+}
+.answer-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 18px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.answer-actions .icon-button {
+  width: 30px;
+  height: 30px;
+  margin-left: -5px;
+}
+@keyframes activity-blink {
+  50% {
+    opacity: 0.55;
+  }
+}
+@media (max-width: 760px) {
+  .turn-process {
+    margin-bottom: 18px;
+  }
+  .turn-thinking,
+  .activity-message.commentary .markdown {
+    font-size: 15px;
+  }
+  .activity-tool {
+    font-size: 13px;
+  }
+  .activity-tool > summary {
+    gap: 7px;
+  }
+  .activity-details {
+    padding-left: 0;
+  }
+  .activity-group-content {
+    padding-left: 12px;
+  }
+  .activity-payload pre {
+    padding: 10px;
+  }
+  .file-result > summary {
+    padding: 12px;
+    gap: 10px;
+  }
+  .file-result-icon {
+    width: 36px;
+    height: 36px;
+  }
+  .file-result-path {
+    font-size: 13px;
+  }
+  .file-result-action {
+    font-size: 12px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .turn-thinking,
+  .streaming-caret {
+    animation: none;
+  }
+}

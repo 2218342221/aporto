@@ -1,0 +1,46 @@
+[agent]
+name = "reviewer"
+description = "基于实际代码、打包技能和审查策略提供可验证结论。"
+
+[model]
+name = "YOUR_MODEL_ID"
+connection = "primary"
+max_output_tokens = 16384
+reasoning = { effort = "high" }
+text = { verbosity = "medium" }
+
+[runtime]
+provider = "docker"
+image = "python:3.12-slim"
+# images = ["python:3.13-slim"]
+# workdir = "/workspace"
+
+[[prompts]]
+source = "resources/prompts/reviewer.md"
+# role defaults to "developer".
+
+[[skills]]
+source = "resources/skills/code-review"
+
+[[mcp]]
+name = "policy"
+source = "resources/mcp/policy"
+command = ["python3", "server.py"]
+env = { REVIEW_LANGUAGE = "zh-CN" }
+# include_tools = ["review_policy"]
+# Without include_tools, activation discovers and locks all tools from this MCP.
+
+[[assets]]
+source = "resources/reference/review-format.md"
+target = "assets/review-format.md"
+
+[limits.turn]
+max_model_requests = 24
+max_tool_calls = 64
+max_parallel_tools = 8
+timeout_ms = 900000
+
+[limits.ptc]
+cell_timeout_ms = 30000
+memory_mb = 128
+max_output_bytes = 65536

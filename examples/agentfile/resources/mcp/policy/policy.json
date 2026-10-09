@@ -1,0 +1,1 @@
+{"review_policy":["Focus on correctness, security boundaries, and data loss.","Give a concrete trigger and affected file for every finding.","Do not claim tests ran without execution evidence."]}
